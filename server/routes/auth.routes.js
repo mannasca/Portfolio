@@ -1,15 +1,12 @@
 import express from "express";
-import { signin, signup, signout } from "../controllers/auth.controller.js";
+import { signUp, signIn, signOut, profile } from "../controllers/auth.controller.js";
+import { verifyToken } from "../middleware/authJwt.js";
 
 const router = express.Router();
 
-// Signup route (POST)
-router.post("/signup", signup);
-
-// Signin route (POST)
-router.post("/signin", signin);
-
-// Signout route (GET)
-router.get("/signout", signout);
+router.post("/signup", signUp);
+router.post("/signin", signIn);
+router.get("/signout", signOut);
+router.get("/profile", verifyToken, profile);
 
 export default router;

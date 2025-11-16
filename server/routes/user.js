@@ -1,12 +1,14 @@
-import { Router } from "express";
-import { getAll, getById, createOne, updateById, removeById, removeAll } from "../controllers/user.js";
-const router = Router();
+import mongoose from "mongoose";
 
-router.get("/", getAll);
-router.get("/:id", getById);
-router.post("/", createOne);
-router.put("/:id", updateById);
-router.delete("/:id", removeById);
-router.delete("/", removeAll);
+const userSchema = new mongoose.Schema(
+    {
+        name: { type: String },
+        username: { type: String },
+        email: { type: String, required: true, unique: true },
+        password: { type: String, required: true },
+        role: { type: String, default: "user" }
+    },
+    { timestamps: true }
+);
 
-export default router;
+export default mongoose.model("User", userSchema);

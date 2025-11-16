@@ -2,9 +2,31 @@ import mongoose from "mongoose";
 
 const schema = new mongoose.Schema(
   {
-    firstname: String,
-    lastname: String,
-    email: String
+    firstname: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    lastname: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      trim: true,
+      lowercase: true,
+    },
+    subject: {
+      type: String,
+      trim: true,
+    },
+    body: {
+      type: String,
+      required: true,
+      trim: true,
+    },
   },
   { timestamps: true }
 );

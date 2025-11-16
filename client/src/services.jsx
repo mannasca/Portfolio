@@ -3,39 +3,11 @@ import { useUser } from './contexts/UserContext';
 
 export default function Services() {
   const { isAdmin, isAuthenticated, userRole } = useUser();
-  
-  // Initialize services from localStorage or use defaults
-  const defaultServices = [
-    {
-      id: 1,
-      title: 'Web Development',
-      desc: 'I design and develop responsive, high-performance websites using React, Node.js, and modern frameworks. My approach focuses on creating clean user interfaces, intuitive navigation, and dynamic functionality.',
-      fullDesc: 'From portfolios to complex web applications, I prioritize scalability, maintainability, and best coding practices to deliver professional-grade web solutions that engage users and drive results.',
-      img: '/images/img1.png',
-      features: ['React & Modern Frameworks', 'Responsive Design', 'Performance Optimization', 'SEO-Friendly Development'],
-    },
-    {
-      id: 2,
-      title: 'API Integration',
-      desc: 'I specialize in connecting applications to reliable data sources and third-party services using RESTful and GraphQL APIs. This includes building secure endpoints and managing authentication.',
-      fullDesc: 'My goal is to make applications smarter and more connected — integrating payment gateways, cloud services, or AI-based APIs with precision and performance for seamless data flow.',
-      img: '/images/img2.png',
-      features: ['RESTful APIs', 'GraphQL APIs', 'Secure Authentication', 'Payment Gateway Integration'],
-    },
-    {
-      id: 3,
-      title: 'Performance Optimization',
-      desc: 'I analyze and enhance web applications to achieve faster load times, smoother interactions, and higher search-engine visibility.',
-      fullDesc: 'Through techniques like code refactoring, lazy loading, caching strategies, and accessibility audits, I ensure both users and search engines experience top performance with improved usability and SEO ranking.',
-      img: '/images/img3.png',
-      features: ['Code Optimization', 'Caching Strategies', 'SEO Enhancement', 'Accessibility Audit'],
-    },
-  ];
-  
   const [services, setServices] = useState([]);
   const [hoveredId, setHoveredId] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     title: '',
     desc: '',
@@ -44,21 +16,34 @@ export default function Services() {
     features: '',
   });
 
-  // Load services from localStorage on component mount
+  // Load services from API on component mount
   useEffect(() => {
-    const storedServices = localStorage.getItem('portfolio_services');
-    if (storedServices) {
-      try {
-        setServices(JSON.parse(storedServices));
-      } catch (error) {
-        console.error('Error loading services:', error);
-        setServices(defaultServices);
-      }
-    } else {
-      setServices(defaultServices);
-      localStorage.setItem('portfolio_services', JSON.stringify(defaultServices));
-    }
+    fetchServices();
   }, []);
+
+  const fetchServices = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('http://localhost:5000/api/service', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch services');
+      }
+
+      const data = await response.json();
+      setServices(data);
+    } catch (error) {
+      console.error('Error fetching services:', error);
+      setServices([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -68,40 +53,51 @@ export default function Services() {
     }));
   };
 
-  const handleCreateService = (e) => {
+  const handleCreateService = async (e) => {
     e.preventDefault();
     if (!formData.title.trim()) {
       alert('Service title is required');
       return;
     }
 
-    let updatedServices;
-    if (editingId) {
-      // Update existing service
-      updatedServices = services.map(s =>
-        s.id === editingId
-          ? {
-              ...s,
-              ...formData,
-              features: formData.features.split(',').map(f => f.trim()),
-            }
-          : s
-      );
-      setEditingId(null);
-    } else {
-      // Create new service
-      const newService = {
-        id: Math.max(...services.map(s => s.id), 0) + 1,
+    try {
+      const serviceData = {
         ...formData,
         features: formData.features.split(',').map(f => f.trim()),
       };
-      updatedServices = [...services, newService];
-    }
 
-    setServices(updatedServices);
-    // Save to localStorage so all users/admins see the changes
-    localStorage.setItem('portfolio_services', JSON.stringify(updatedServices));
-    resetForm();
+      let response;
+      if (editingId) {
+        // Update existing service
+        response = await fetch(`http://localhost:5000/api/service/${editingId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(serviceData),
+        });
+      } else {
+        // Create new service
+        response = await fetch('http://localhost:5000/api/service', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(serviceData),
+        });
+      }
+
+      if (!response.ok) {
+        throw new Error('Failed to save service');
+      }
+
+      await fetchServices();
+      resetForm();
+      alert(editingId ? 'Service updated successfully!' : 'Service created successfully!');
+    } catch (error) {
+      console.error('Error saving service:', error);
+      alert('Error saving service. Please try again.');
+    }
   };
 
   const handleEditService = (service) => {
@@ -110,18 +106,32 @@ export default function Services() {
       desc: service.desc,
       fullDesc: service.fullDesc,
       img: service.img,
-      features: service.features.join(', '),
+      features: Array.isArray(service.features) ? service.features.join(', ') : service.features,
     });
-    setEditingId(service.id);
+    setEditingId(service._id);
     setShowForm(true);
   };
 
-  const handleDeleteService = (id) => {
+  const handleDeleteService = async (id) => {
     if (window.confirm('Are you sure you want to delete this service?')) {
-      const updatedServices = services.filter(s => s.id !== id);
-      setServices(updatedServices);
-      // Save to localStorage
-      localStorage.setItem('portfolio_services', JSON.stringify(updatedServices));
+      try {
+        const response = await fetch(`http://localhost:5000/api/service/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to delete service');
+        }
+
+        await fetchServices();
+        alert('Service deleted successfully!');
+      } catch (error) {
+        console.error('Error deleting service:', error);
+        alert('Error deleting service. Please try again.');
+      }
     }
   };
 
@@ -134,6 +144,7 @@ export default function Services() {
       features: '',
     });
     setShowForm(false);
+    setEditingId(null);
   };
 
   const styles = {
@@ -150,6 +161,7 @@ export default function Services() {
       textAlign: 'center',
       color: '#e8eefc',
       letterSpacing: '-0.02em',
+      animation: 'fadeInDown 0.8s ease-out',
     },
     subheading: {
       margin: '0 0 48px 0',
@@ -157,6 +169,7 @@ export default function Services() {
       textAlign: 'center',
       color: '#a8b0c7',
       fontWeight: 500,
+      animation: 'fadeInUp 0.8s ease-out 0.1s backwards',
     },
     buttonContainer: {
       display: 'flex',
@@ -258,6 +271,7 @@ export default function Services() {
       display: 'flex',
       flexDirection: 'column',
       cursor: 'pointer',
+      animation: 'slideInUp 0.6s ease-out',
     },
     cardHovered: {
       transform: 'translateY(-8px)',
@@ -363,6 +377,74 @@ export default function Services() {
 
   return (
     <section style={styles.section}>
+      <style>{`
+        @keyframes fadeInDown {
+          from {
+            opacity: 0;
+            transform: translateY(-30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes slideInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @media (max-width: 768px) {
+          section {
+            padding: 40px 16px !important;
+          }
+
+          h1 {
+            font-size: 32px !important;
+          }
+
+          .servicesContainer {
+            grid-template-columns: 1fr !important;
+            gap: 24px !important;
+          }
+
+          .card {
+            padding: 24px !important;
+          }
+        }
+
+        @media (max-width: 480px) {
+          h1 {
+            font-size: 28px !important;
+          }
+
+          p {
+            font-size: 14px !important;
+          }
+
+          .title {
+            font-size: 18px !important;
+          }
+        }
+      `}</style>
+
       <h1 style={styles.heading}>Services</h1>
       <p style={styles.subheading}>
         Comprehensive solutions to bring your vision to life with cutting-edge technology

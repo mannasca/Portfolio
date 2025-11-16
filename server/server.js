@@ -1,40 +1,53 @@
 import express from "express";
+import mongoose from "mongoose";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 import cors from "cors";
-import connectDB from "./config/db.config.js";
 import authRoutes from "./routes/auth.routes.js";
+import contactRoutes from "./routes/contact.js";
+import qualificationRoutes from "./routes/qualification.js";
+import projectRoutes from "./routes/project.js";
+import serviceRoutes from "./routes/service.js";
+import { seedProjects } from "./controllers/project.js";
+import { seedServices } from "./controllers/service.js";
 
-// Load environment variables FIRST
-dotenv.config({ path: ".env" });
+dotenv.config();
 
-// Debug: Log the PORT value
-console.log("DEBUG: process.env.PORT =", process.env.PORT);
-console.log("DEBUG: .env file loaded");
-
-// Initialize app
 const app = express();
 
-// Middleware
-app.use(cors());
+// ----- MIDDLEWARE -----
 app.use(express.json());
+app.use(cookieParser());
 
-// Connect to MongoDB
-connectDB();
+// FIXED CORS — required for Postman + frontend cookies
+app.use(cors({
+    origin: true,
+    credentials: true
+}));
 
-// Default route
-app.get("/", (req, res) => {
-  res.send("✅ Portfolio API running...");
-});
+// ----- MONGO CONNECTION -----
+mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+.then(() => {
+    console.log("MongoDB connected");
+    // Seed default data on first load
+    seedProjects();
+    seedServices();
+})
+.catch((err) => console.log(err));
 
-// API routes
+// ----- ROUTES -----
 app.use("/auth", authRoutes);
+app.use("/api/contact", contactRoutes);
+app.use("/api/qualification", qualificationRoutes);
+app.use("/api/project", projectRoutes);
+app.use("/api/service", serviceRoutes);
 
-// Server port - explicitly use 4000 if .env not working
-const PORT = process.env.PORT ? parseInt(process.env.PORT) : 4000;
+// ----- SERVER -----
+const PORT = process.env.PORT || 5000;
 
-console.log("DEBUG: Final PORT =", PORT);
-
-// Start server
 app.listen(PORT, () => {
-  console.log(`✅ Server running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });

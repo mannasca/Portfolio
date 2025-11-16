@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useReducer, useState } from 'react';
 
 const API = import.meta.env.VITE_API_URL;
 
@@ -37,73 +37,166 @@ const validators = {
   },
 };
 
+// Form reducer for state management
+const formReducer = (state, action) => {
+  switch (action.type) {
+    case 'SET_FIELD':
+      return {
+        ...state,
+        formData: {
+          ...state.formData,
+          [action.payload.field]: action.payload.value,
+        },
+      };
+    case 'SET_ERROR':
+      return {
+        ...state,
+        errors: {
+          ...state.errors,
+          [action.payload.field]: action.payload.error,
+        },
+      };
+    case 'SET_TOUCHED':
+      return {
+        ...state,
+        touched: {
+          ...state.touched,
+          [action.payload.field]: action.payload.value,
+        },
+      };
+    case 'SET_ERRORS':
+      return {
+        ...state,
+        errors: action.payload,
+      };
+    case 'SET_TOUCHED_ALL':
+      return {
+        ...state,
+        touched: action.payload,
+      };
+    case 'RESET_FORM':
+      return {
+        formData: {
+          firstName: '',
+          lastName: '',
+          email: '',
+          subject: '',
+          message: '',
+        },
+        errors: {},
+        touched: {},
+        isSubmitting: false,
+      };
+    case 'SET_SUBMITTING':
+      return {
+        ...state,
+        isSubmitting: action.payload,
+      };
+    default:
+      return state;
+  }
+};
+
+const initialState = {
+  formData: {
+    firstName: '',
+    lastName: '',
+    email: '',
+    subject: '',
+    message: '',
+  },
+  errors: {},
+  touched: {},
+  isSubmitting: false,
+};
+
 export default function Contact() {
   const navigate = useNavigate();
-  const [errors, setErrors] = useState({});
-  const [touched, setTouched] = useState({});
+  const [state, dispatch] = useReducer(formReducer, initialState);
+  const [submitMessage, setSubmitMessage] = useState('');
+  const [submitError, setSubmitError] = useState('');
 
   const handleFieldBlur = (fieldName) => {
-    setTouched(prev => ({ ...prev, [fieldName]: true }));
+    dispatch({
+      type: 'SET_TOUCHED',
+      payload: { field: fieldName, value: true },
+    });
   };
 
   const handleFieldChange = (fieldName, value) => {
+    dispatch({
+      type: 'SET_FIELD',
+      payload: { field: fieldName, value },
+    });
+
     // Validate field in real-time after it's been touched
-    if (touched[fieldName]) {
+    if (state.touched[fieldName]) {
       const error = validators[fieldName](value);
-      setErrors(prev => ({ ...prev, [fieldName]: error }));
+      dispatch({
+        type: 'SET_ERROR',
+        payload: { field: fieldName, error },
+      });
     }
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    const form = e.currentTarget;
-    const data = Object.fromEntries(new FormData(form).entries());
+    setSubmitMessage('');
+    setSubmitError('');
 
     // Validate all fields
     const newErrors = {};
     Object.keys(validators).forEach(field => {
-      newErrors[field] = validators[field](data[field] || '');
+      newErrors[field] = validators[field](state.formData[field] || '');
     });
-    setErrors(newErrors);
+
+    dispatch({ type: 'SET_ERRORS', payload: newErrors });
 
     // Check if there are any errors
     const hasErrors = Object.values(newErrors).some(error => error !== '');
     if (hasErrors) {
-      setTouched({
-        firstName: true,
-        lastName: true,
-        email: true,
-        subject: true,
-        message: true,
+      dispatch({
+        type: 'SET_TOUCHED_ALL',
+        payload: {
+          firstName: true,
+          lastName: true,
+          email: true,
+          subject: true,
+          message: true,
+        },
       });
       return;
     }
 
+    dispatch({ type: 'SET_SUBMITTING', payload: true });
+
     try {
-      const res = await fetch(`${API}/api/messages`, {
+      const res = await fetch(`${API}/api/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: `${data.firstName} ${data.lastName}`.trim(),
-          email: data.email,
-          subject: data.subject || '',
-          body: data.message
-        })
+          firstname: state.formData.firstName,
+          lastname: state.formData.lastName,
+          email: state.formData.email,
+          subject: state.formData.subject || '',
+          body: state.formData.message,
+        }),
       });
 
       if (res.ok) {
-        alert('✅ Message sent successfully!');
-        form.reset();
-        setErrors({});
-        setTouched({});
+        setSubmitMessage('✅ Message sent successfully!');
+        dispatch({ type: 'RESET_FORM' });
         // Redirect to home page after successful submission
-        setTimeout(() => navigate('/'), 500);
+        setTimeout(() => navigate('/'), 1500);
       } else {
-        alert('❌ Failed to send message. Please try again.');
+        const errorData = await res.json();
+        setSubmitError(`❌ Failed to send message: ${errorData.error || 'Please try again.'}`);
       }
     } catch (error) {
-      alert('❌ Error sending message. Please check your connection and try again.');
+      setSubmitError('❌ Error sending message. Please check your connection and try again.');
       console.error('Error:', error);
+    } finally {
+      dispatch({ type: 'SET_SUBMITTING', payload: false });
     }
   };
 
@@ -195,6 +288,17 @@ export default function Contact() {
       color: '#ef4444',
       fontWeight: 500,
     },
+    successMessage: {
+      display: 'block',
+      padding: '12px 16px',
+      marginBottom: '24px',
+      fontSize: '14px',
+      color: '#22c55e',
+      backgroundColor: 'rgba(34, 197, 94, 0.1)',
+      borderRadius: '8px',
+      border: '1px solid rgba(34, 197, 94, 0.3)',
+      fontWeight: 500,
+    },
     submitButton: {
       width: '100%',
       padding: '14px 32px',
@@ -210,6 +314,8 @@ export default function Contact() {
       cursor: 'pointer',
       transition: 'all 200ms ease',
       boxShadow: '0 4px 15px rgba(102, 126, 234, 0.3)',
+      opacity: state.isSubmitting ? 0.7 : 1,
+      pointerEvents: state.isSubmitting ? 'none' : 'auto',
     },
     submitButtonHover: {
       transform: 'translateY(-2px)',
@@ -221,23 +327,30 @@ export default function Contact() {
     <section style={styles.section}>
       <h2 style={styles.heading}>Contact Me</h2>
       <form onSubmit={onSubmit} style={styles.formContainer}>
+        {submitMessage && (
+          <div style={styles.successMessage}>{submitMessage}</div>
+        )}
+        {submitError && (
+          <div style={styles.errorMessage}>{submitError}</div>
+        )}
+
         <div style={styles.formGroup}>
           <label style={styles.label}>First Name</label>
           <input
             type="text"
-            name="firstName"
-            required
+            value={state.formData.firstName}
             style={{
               ...styles.input,
-              ...(touched.firstName && errors.firstName ? styles.inputError : {}),
+              ...(state.touched.firstName && state.errors.firstName ? styles.inputError : {}),
             }}
             onBlur={() => handleFieldBlur('firstName')}
             onChange={(e) => handleFieldChange('firstName', e.target.value)}
             onFocus={(e) => Object.assign(e.target.style, styles.inputFocus)}
             onMouseLeave={(e) => { if (!e.target.matches(':focus')) e.target.style.boxShadow = ''; }}
+            disabled={state.isSubmitting}
           />
-          {touched.firstName && errors.firstName && (
-            <span style={styles.errorMessage}>{errors.firstName}</span>
+          {state.touched.firstName && state.errors.firstName && (
+            <span style={styles.errorMessage}>{state.errors.firstName}</span>
           )}
         </div>
 
@@ -245,17 +358,17 @@ export default function Contact() {
           <label style={styles.label}>Last Name</label>
           <input
             type="text"
-            name="lastName"
-            required
+            value={state.formData.lastName}
             style={{
               ...styles.input,
-              ...(touched.lastName && errors.lastName ? styles.inputError : {}),
+              ...(state.touched.lastName && state.errors.lastName ? styles.inputError : {}),
             }}
             onBlur={() => handleFieldBlur('lastName')}
             onChange={(e) => handleFieldChange('lastName', e.target.value)}
+            disabled={state.isSubmitting}
           />
-          {touched.lastName && errors.lastName && (
-            <span style={styles.errorMessage}>{errors.lastName}</span>
+          {state.touched.lastName && state.errors.lastName && (
+            <span style={styles.errorMessage}>{state.errors.lastName}</span>
           )}
         </div>
 
@@ -263,17 +376,17 @@ export default function Contact() {
           <label style={styles.label}>Email</label>
           <input
             type="email"
-            name="email"
-            required
+            value={state.formData.email}
             style={{
               ...styles.input,
-              ...(touched.email && errors.email ? styles.inputError : {}),
+              ...(state.touched.email && state.errors.email ? styles.inputError : {}),
             }}
             onBlur={() => handleFieldBlur('email')}
             onChange={(e) => handleFieldChange('email', e.target.value)}
+            disabled={state.isSubmitting}
           />
-          {touched.email && errors.email && (
-            <span style={styles.errorMessage}>{errors.email}</span>
+          {state.touched.email && state.errors.email && (
+            <span style={styles.errorMessage}>{state.errors.email}</span>
           )}
         </div>
 
@@ -281,46 +394,48 @@ export default function Contact() {
           <label style={styles.label}>Subject</label>
           <input
             type="text"
-            name="subject"
+            value={state.formData.subject}
             style={{
               ...styles.input,
-              ...(touched.subject && errors.subject ? styles.inputError : {}),
+              ...(state.touched.subject && state.errors.subject ? styles.inputError : {}),
             }}
             onBlur={() => handleFieldBlur('subject')}
             onChange={(e) => handleFieldChange('subject', e.target.value)}
+            disabled={state.isSubmitting}
           />
-          {touched.subject && errors.subject && (
-            <span style={styles.errorMessage}>{errors.subject}</span>
+          {state.touched.subject && state.errors.subject && (
+            <span style={styles.errorMessage}>{state.errors.subject}</span>
           )}
         </div>
 
         <div style={styles.formGroup}>
           <label style={styles.label}>Message</label>
           <textarea
-            name="message"
-            required
+            value={state.formData.message}
             style={{
               ...styles.textarea,
-              ...(touched.message && errors.message ? styles.textareaError : {}),
+              ...(state.touched.message && state.errors.message ? styles.textareaError : {}),
             }}
             onBlur={() => handleFieldBlur('message')}
             onChange={(e) => handleFieldChange('message', e.target.value)}
+            disabled={state.isSubmitting}
           />
-          {touched.message && errors.message && (
-            <span style={styles.errorMessage}>{errors.message}</span>
+          {state.touched.message && state.errors.message && (
+            <span style={styles.errorMessage}>{state.errors.message}</span>
           )}
         </div>
 
         <button 
           type="submit" 
           style={styles.submitButton}
-          onMouseEnter={(e) => Object.assign(e.target.style, styles.submitButtonHover)}
+          disabled={state.isSubmitting}
+          onMouseEnter={(e) => !state.isSubmitting && Object.assign(e.target.style, styles.submitButtonHover)}
           onMouseLeave={(e) => {
             e.target.style.transform = '';
             e.target.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.3)';
           }}
         >
-          Send Message
+          {state.isSubmitting ? 'Sending...' : 'Send Message'}
         </button>
       </form>
     </section>

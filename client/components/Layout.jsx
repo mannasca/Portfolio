@@ -154,7 +154,29 @@ export default function Layout() {
                 e.target.style.backgroundColor = 'transparent';
               }}
             >
-              Project
+              Projects
+            </Link>
+            <span style={{ color: 'rgba(255, 255, 255, 0.3)' }}>|</span>
+            <Link 
+              to="/qualification" 
+              style={{
+                padding: '12px 20px',
+                color: '#00d4ff',
+                textDecoration: 'none',
+                fontWeight: '500',
+                fontSize: '1rem',
+                transition: 'all 220ms cubic-bezier(.2,.8,.2,1)',
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.color = '#ff006e';
+                e.target.style.backgroundColor = 'rgba(0, 212, 255, 0.08)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.color = '#00d4ff';
+                e.target.style.backgroundColor = 'transparent';
+              }}
+            >
+              Qualifications
             </Link>
             <span style={{ color: 'rgba(255, 255, 255, 0.3)' }}>|</span>
             <Link 

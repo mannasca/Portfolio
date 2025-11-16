@@ -4,47 +4,11 @@ import { useUser } from './contexts/UserContext';
 
 export default function Projects() {
   const { isAdmin, isAuthenticated, userRole } = useUser();
-  
-  // Initialize projects from localStorage or use defaults
-  const defaultProjects = [
-    {
-      id: 1,
-      title: 'Task Manager App',
-      description:
-        'A React + Node.js app to manage tasks with authentication and CRUD operations.',
-      role: 'Full Stack Developer',
-      outcome:
-        'Built a secure task management tool with login/logout and real-time updates.',
-      tech: ['React', 'Node.js', 'MongoDB', 'JWT'],
-      status: 'Completed',
-    },
-    {
-      id: 2,
-      title: 'Portfolio Website',
-      description: 'My personal portfolio built with React.',
-      role: 'Frontend Developer',
-      outcome:
-        'Designed a responsive, modern portfolio showcasing my work and skills.',
-      tech: ['React', 'Vite', 'CSS3', 'Responsive Design'],
-      status: 'In Progress',
-    },
-    {
-      id: 3,
-      title: 'Weather Dashboard',
-      description:
-        'An app that shows live weather data using a public API and charts.',
-      role: 'Frontend Developer',
-      outcome:
-        'Integrated OpenWeather API and Chart.js for interactive visualizations.',
-      tech: ['React', 'OpenWeather API', 'Chart.js', 'Axios'],
-      status: 'Completed',
-    },
-  ];
-
   const [projects, setProjects] = useState([]);
   const [hoveredId, setHoveredId] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -54,21 +18,35 @@ export default function Projects() {
     status: 'In Progress',
   });
 
-  // Load projects from localStorage on component mount
+  // Load projects from API on component mount
   useEffect(() => {
-    const storedProjects = localStorage.getItem('portfolio_projects');
-    if (storedProjects) {
-      try {
-        setProjects(JSON.parse(storedProjects));
-      } catch (error) {
-        console.error('Error loading projects:', error);
-        setProjects(defaultProjects);
-      }
-    } else {
-      setProjects(defaultProjects);
-      localStorage.setItem('portfolio_projects', JSON.stringify(defaultProjects));
-    }
+    fetchProjects();
   }, []);
+
+  const fetchProjects = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('http://localhost:5000/api/project', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch projects');
+      }
+
+      const data = await response.json();
+      setProjects(data);
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+      // Fallback to empty array
+      setProjects([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -78,40 +56,51 @@ export default function Projects() {
     }));
   };
 
-  const handleCreateProject = (e) => {
+  const handleCreateProject = async (e) => {
     e.preventDefault();
     if (!formData.title.trim()) {
       alert('Project title is required');
       return;
     }
 
-    let updatedProjects;
-    if (editingId) {
-      // Update existing project
-      updatedProjects = projects.map(p =>
-        p.id === editingId
-          ? {
-              ...p,
-              ...formData,
-              tech: formData.tech.split(',').map(t => t.trim()),
-            }
-          : p
-      );
-      setEditingId(null);
-    } else {
-      // Create new project
-      const newProject = {
-        id: Math.max(...projects.map(p => p.id), 0) + 1,
+    try {
+      const projectData = {
         ...formData,
         tech: formData.tech.split(',').map(t => t.trim()),
       };
-      updatedProjects = [...projects, newProject];
-    }
 
-    setProjects(updatedProjects);
-    // Save to localStorage so all users/admins see the changes
-    localStorage.setItem('portfolio_projects', JSON.stringify(updatedProjects));
-    resetForm();
+      let response;
+      if (editingId) {
+        // Update existing project
+        response = await fetch(`http://localhost:5000/api/project/${editingId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(projectData),
+        });
+      } else {
+        // Create new project
+        response = await fetch('http://localhost:5000/api/project', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(projectData),
+        });
+      }
+
+      if (!response.ok) {
+        throw new Error('Failed to save project');
+      }
+
+      await fetchProjects();
+      resetForm();
+      alert(editingId ? 'Project updated successfully!' : 'Project created successfully!');
+    } catch (error) {
+      console.error('Error saving project:', error);
+      alert('Error saving project. Please try again.');
+    }
   };
 
   const handleEditProject = (project) => {
@@ -120,19 +109,33 @@ export default function Projects() {
       description: project.description,
       role: project.role,
       outcome: project.outcome,
-      tech: project.tech.join(', '),
+      tech: Array.isArray(project.tech) ? project.tech.join(', ') : project.tech,
       status: project.status,
     });
-    setEditingId(project.id);
+    setEditingId(project._id);
     setShowForm(true);
   };
 
-  const handleDeleteProject = (id) => {
+  const handleDeleteProject = async (id) => {
     if (window.confirm('Are you sure you want to delete this project?')) {
-      const updatedProjects = projects.filter(p => p.id !== id);
-      setProjects(updatedProjects);
-      // Save to localStorage
-      localStorage.setItem('portfolio_projects', JSON.stringify(updatedProjects));
+      try {
+        const response = await fetch(`http://localhost:5000/api/project/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to delete project');
+        }
+
+        await fetchProjects();
+        alert('Project deleted successfully!');
+      } catch (error) {
+        console.error('Error deleting project:', error);
+        alert('Error deleting project. Please try again.');
+      }
     }
   };
 
@@ -146,6 +149,7 @@ export default function Projects() {
       status: 'In Progress',
     });
     setShowForm(false);
+    setEditingId(null);
   };
 
   const styles = {
@@ -163,6 +167,7 @@ export default function Projects() {
       fontWeight: 800,
       color: '#ffffff',
       letterSpacing: '-0.02em',
+      animation: 'fadeInDown 0.8s ease-out',
     },
     subheading: {
       margin: 0,
@@ -171,6 +176,7 @@ export default function Projects() {
       textAlign: 'center',
       color: '#b8c5d6',
       fontWeight: 500,
+      animation: 'fadeInUp 0.8s ease-out 0.1s backwards',
     },
     buttonContainer: {
       display: 'flex',
@@ -273,6 +279,7 @@ export default function Projects() {
       overflow: 'hidden',
       display: 'flex',
       flexDirection: 'column',
+      animation: 'slideInUp 0.6s ease-out',
     },
     cardHovered: {
       transform: 'translateY(-8px)',
@@ -387,6 +394,74 @@ export default function Projects() {
 
   return (
     <section style={styles.section}>
+      <style>{`
+        @keyframes fadeInDown {
+          from {
+            opacity: 0;
+            transform: translateY(-30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes slideInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @media (max-width: 768px) {
+          section {
+            padding: 40px 16px !important;
+          }
+
+          h2 {
+            font-size: 32px !important;
+          }
+
+          .grid {
+            grid-template-columns: 1fr !important;
+            gap: 24px !important;
+          }
+
+          .card {
+            padding: 24px !important;
+          }
+        }
+
+        @media (max-width: 480px) {
+          h2 {
+            font-size: 28px !important;
+          }
+
+          p {
+            font-size: 14px !important;
+          }
+
+          .title {
+            font-size: 18px !important;
+          }
+        }
+      `}</style>
+
       <h2 style={styles.heading}>My Projects</h2>
       <p style={styles.subheading}>
         Explore a selection of my recent work and professional achievements
