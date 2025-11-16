@@ -1,0 +1,206 @@
+/* ===========================
+   Elevated Portfolio Styles
+   (keeps your original selectors)
+   =========================== */
+
+:root {
+  /* Your base tokens */
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.92);
+  background-color: #0b1020; /* deeper base for contrast */
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Design tokens */
+  --accent: #7aa2ff;
+  --accent-2: #b686ff;
+  --text-1: #e8eefc;
+  --text-2: #a8b0c7;
+  --panel: rgba(255, 255, 255, 0.06);
+  --panel-strong: rgba(255, 255, 255, 0.12);
+  --radius: 16px;
+  --shadow: 0 12px 40px rgba(0,0,0,.35);
+  --t: 220ms cubic-bezier(.2,.8,.2,1);
+}
+
+/* Immersive gradient field + subtle star grid */
+body {
+  margin: 0 auto;
+  width: min(100%, 1100px);
+  padding: clamp(16px, 3.5vw, 32px);
+
+  color: var(--text-1);
+  background:
+    radial-gradient(1200px 800px at 80% -20%, rgba(122,162,255,.18), transparent 60%),
+    radial-gradient(900px 700px at -10% 20%, rgba(182,134,255,.16), transparent 65%),
+    linear-gradient(180deg, #0f1530 0%, #0b1020 60%, #0b1020 100%);
+  background-attachment: fixed;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Decorative micro-grid */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 22px 22px;
+  opacity: .25;
+  mask-image: radial-gradient(60% 60% at 50% 40%, black 55%, transparent 100%);
+}
+
+/* Typography */
+h1 {
+  font-size: clamp(2.25rem, 4vw, 3.4rem);
+  line-height: 1.15;
+  margin: 0 0 .6em 0;
+  letter-spacing: .2px;
+  text-wrap: balance;
+}
+
+p { color: var(--text-2); }
+
+/* Links with animated underline */
+a {
+  font-weight: 500;
+  color: var(--accent);
+  text-decoration: none;
+  position: relative;
+  transition: color var(--t);
+}
+a::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: -3px;
+  width: 100%; height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--t);
+}
+a:hover { color: color-mix(in oklab, var(--accent) 75%, white); }
+a:hover::after { transform: scaleX(1); }
+
+/* Buttons: subtle glass + gradient ring on hover */
+button {
+  border-radius: 10px;
+  border: 1px solid var(--panel-strong);
+  padding: 0.7em 1.15em;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: inherit;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
+  color: var(--text-1);
+  cursor: pointer;
+  transition: transform var(--t), box-shadow var(--t), border-color var(--t);
+  box-shadow: 0 6px 22px rgba(0,0,0,.25);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+button:hover {
+  border-color: color-mix(in oklab, var(--accent) 40%, var(--panel-strong));
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+button:focus,
+button:focus-visible {
+  outline: 3px solid color-mix(in oklab, var(--accent) 65%, white);
+  outline-offset: 2px;
+}
+
+/* Glassy “card” look for any direct children sections */
+body > section,
+body > div.card,
+.card {
+  border: 1px solid var(--panel-strong);
+  border-radius: clamp(14px, 2vw, 22px);
+  background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.03));
+  backdrop-filter: blur(14px) saturate(1.05);
+  -webkit-backdrop-filter: blur(14px) saturate(1.05);
+  padding: clamp(16px, 3vw, 28px);
+  box-shadow: var(--shadow);
+  transition: transform var(--t), box-shadow var(--t), border-color var(--t);
+}
+body > section:hover,
+.card:hover {
+  transform: translateY(-6px);
+  border-color: color-mix(in oklab, var(--accent) 35%, var(--panel-strong));
+}
+
+/* Top nav: sticky, blurred, right-aligned as per your selector */
+nav {
+  position: sticky;
+  top: 16px;
+  z-index: 50;
+  float: right; /* keep your original behavior */
+  font-size: clamp(1rem, 1.4vw, 1.25rem);
+
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--panel-strong);
+  background: var(--panel);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 26px rgba(0,0,0,.28);
+}
+nav a {
+  display: inline-block;
+  padding: 8px 12px;
+  margin: 0 2px;
+  border-radius: 999px;
+}
+nav a:hover {
+  background: rgba(255,255,255,0.06);
+}
+
+/* Responsive container (replaces fixed 980px feel, but keeps your intent) */
+@media (max-width: 1200px) {
+  body { width: min(100%, 1000px); }
+}
+@media (max-width: 1024px) {
+  body { width: min(100%, 920px); }
+}
+@media (max-width: 900px) {
+  body { width: 100%; padding: 20px; }
+  nav { position: static; float: none; display: inline-flex; flex-wrap: wrap; gap: 4px; }
+}
+
+/* Motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+
+/* Light scheme tweaks (keeps your block but upgrades palette) */
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #1a2147;
+    background-color: #ffffff;
+    --text-1: #0e1433;
+    --text-2: #4a5680;
+    --panel: rgba(0, 25, 70, 0.04);
+    --panel-strong: rgba(0, 25, 70, 0.10);
+    --accent: #3d7bff;
+    --accent-2: #7a44ff;
+  }
+  body {
+    background:
+      radial-gradient(1200px 800px at 80% -20%, rgba(61,123,255,.16), transparent 60%),
+      radial-gradient(900px 700px at -10% 20%, rgba(122,68,255,.14), transparent 65%),
+      linear-gradient(180deg, #f6f8ff 0%, #ffffff 60%, #ffffff 100%);
+  }
+  a:hover { color: #747bff; }
+  button { background: linear-gradient(180deg, rgba(0,0,0,.03), rgba(0,0,0,.01)); color: #1b2347; }
+}
+
+/* Optional niceties (no markup changes needed if you already use .card) */
+.read-the-docs { color: var(--text-2); }

@@ -1,0 +1,323 @@
+/* ===========================
+   Mind-blowing Portfolio CSS
+   =========================== */
+
+/* ---------- Design Tokens ---------- */
+:root {
+  /* Palette */
+  --bg-1: #0b1020;            /* deep space */
+  --bg-2: #0f1530;            /* twilight */
+  --bg-3: #171c3a;            /* panel tone */
+  --glass: rgba(255, 255, 255, 0.06);
+  --glass-strong: rgba(255, 255, 255, 0.12);
+  --txt-1: #e8eefc;           /* primary text */
+  --txt-2: #a9b3c9;           /* secondary text */
+  --brand: #6ea8ff;           /* accent */
+  --brand-2: #a879ff;         /* secondary accent */
+  --ok: #4ade80;
+  --warn: #f59e0b;
+  --err: #ef4444;
+
+  /* Shadows & radius */
+  --radius-xl: 24px;
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --shadow-soft: 0 10px 30px rgba(0,0,0,0.25);
+  --shadow-hard: 0 40px 80px rgba(0,0,0,0.35);
+
+  /* Sizing & rhythm */
+  --maxw: 1200px;
+  --pad: clamp(16px, 3vw, 32px);
+  --gap: clamp(16px, 3vw, 28px);
+
+  /* Transitions */
+  --t: 220ms cubic-bezier(.2,.8,.2,1);
+  --t-slow: 520ms cubic-bezier(.2,.8,.2,1);
+}
+
+/* Light mode support (optional) */
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg-1: #f6f8ff;
+    --bg-2: #eef2ff;
+    --bg-3: #ffffff;
+    --glass: rgba(0, 25, 70, 0.04);
+    --glass-strong: rgba(0, 25, 70, 0.08);
+    --txt-1: #10163a;
+    --txt-2: #42507a;
+    --brand: #3b82f6;
+    --brand-2: #7c3aed;
+  }
+}
+
+/* ---------- Page Background ---------- */
+html, body, #root {
+  background-color: grey; /* Fallback per your original note */
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Immersive layered gradient + subtle grid */
+body {
+  color: var(--txt-1);
+  background:
+    radial-gradient(1200px 800px at 80% -20%, rgba(110,168,255,.20), transparent 60%),
+    radial-gradient(1000px 700px at -10% 20%, rgba(168,121,255,.18), transparent 65%),
+    linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 60%);
+  background-attachment: fixed;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+  line-height: 1.6;
+}
+
+/* Decorative, very subtle dot grid */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 1px 1px, rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 22px 22px;
+  mask-image: radial-gradient(60% 60% at 50% 40%, black 55%, transparent 100%);
+  opacity: .25;
+}
+
+/* ---------- Container ---------- */
+#root {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: calc(var(--pad) + 10px);
+  text-align: left;
+}
+
+/* Optional “hero” clamp */
+.container {
+  margin: 0 auto;
+  width: min(100%, var(--maxw));
+  padding-inline: var(--pad);
+}
+
+/* ---------- Typography ---------- */
+h1, h2, h3 {
+  letter-spacing: 0.2px;
+  line-height: 1.2;
+  color: var(--txt-1);
+  margin: 0 0 0.6em 0;
+  text-wrap: balance;
+}
+
+h1 { font-size: clamp(2.2rem, 3.4vw, 3.2rem); }
+h2 { font-size: clamp(1.6rem, 2.4vw, 2.2rem); color: color-mix(in oklab, var(--txt-1) 90%, white); }
+h3 { font-size: clamp(1.25rem, 1.6vw, 1.4rem); color: var(--txt-1); }
+
+p, li { color: var(--txt-2); }
+
+/* ---------- Links & Buttons ---------- */
+a {
+  color: var(--brand);
+  text-decoration: none;
+  position: relative;
+  transition: color var(--t);
+}
+
+a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  height: 2px;
+  width: 100%;
+  background: linear-gradient(90deg, var(--brand), var(--brand-2));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--t);
+}
+
+a:hover { color: color-mix(in oklab, var(--brand) 70%, white); }
+a:hover::after { transform: scaleX(1); }
+
+.button, button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02)) padding-box,
+    linear-gradient(120deg, var(--brand), var(--brand-2)) border-box;
+  color: var(--txt-1);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: transform var(--t), box-shadow var(--t), background var(--t);
+  cursor: pointer;
+}
+
+.button:hover, button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hard);
+}
+
+.button:active, button:active { transform: translateY(0); }
+
+/* ---------- Logo (with luxe hover) ---------- */
+.logo {
+  height: clamp(56px, 8vw, 96px);
+  padding: 1.2em;
+  will-change: filter, transform;
+  transition: filter 300ms, transform var(--t);
+  filter: drop-shadow(0 8px 22px rgba(0,0,0,.35)) saturate(1.03);
+}
+
+.logo:hover {
+  filter: drop-shadow(0 10px 28px rgba(100,108,255,.45));
+  transform: scale(1.04) translateY(-2px);
+}
+
+.logo.react:hover {
+  filter: drop-shadow(0 10px 28px rgba(97,218,251,.5));
+}
+
+@keyframes logo-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Only spin for users who allow motion */
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 16s linear;
+  }
+}
+
+/* ---------- Card (Glass Panel) ---------- */
+.card {
+  padding: clamp(18px, 3.5vw, 28px);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--glass-strong);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.02));
+  background-clip: padding-box;
+  backdrop-filter: blur(14px) saturate(1.1);
+  -webkit-backdrop-filter: blur(14px) saturate(1.1);
+  box-shadow: var(--shadow-soft);
+  color: var(--txt-1);
+  transition: transform var(--t), box-shadow var(--t), border-color var(--t);
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-hard);
+  border-color: color-mix(in oklab, var(--brand) 35%, var(--glass-strong));
+}
+
+/* Card grid helper (optional) */
+.cards {
+  display: grid;
+  gap: var(--gap);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  margin-block: calc(var(--gap) + 8px);
+}
+
+/* ---------- Muted text ---------- */
+.read-the-docs {
+  color: var(--txt-2);
+  opacity: .9;
+}
+
+/* ---------- Subtle separators ---------- */
+.hr {
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.14), transparent);
+  margin: 24px 0;
+}
+
+/* ---------- Fancy Sections (optional classes) ---------- */
+.section {
+  margin-block: clamp(24px, 6vw, 80px);
+}
+
+.section--hero {
+  display: grid;
+  gap: var(--gap);
+  align-items: center;
+  grid-template-columns: 1.2fr 1fr;
+}
+
+@media (max-width: 900px) {
+  .section--hero { grid-template-columns: 1fr; }
+}
+
+/* Accent heading underline */
+.accent-title {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 6px;
+}
+
+.accent-title::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: 0;
+  width: 100%;
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--brand), var(--brand-2));
+  filter: drop-shadow(0 6px 14px rgba(110,168,255,.35));
+}
+
+/* ---------- Tag/Pill (optional) ---------- */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--glass-strong);
+  background: var(--glass);
+  color: var(--txt-1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 18px rgba(0,0,0,.25) inset, 0 6px 18px rgba(0,0,0,.15);
+}
+
+/* Status dots you can reuse */
+.dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.dot--ok   { background: var(--ok);   box-shadow: 0 0 20px var(--ok); }
+.dot--warn { background: var(--warn); box-shadow: 0 0 20px var(--warn); }
+.dot--err  { background: var(--err);  box-shadow: 0 0 20px var(--err); }
+
+/* ---------- Media & Layout Tweaks ---------- */
+img, svg, video { max-width: 100%; height: auto; border-radius: 12px; }
+*:focus-visible {
+  outline: 2px solid color-mix(in oklab, var(--brand) 65%, white);
+  outline-offset: 2px;
+  border-radius: 8px;
+  transition: outline-color var(--t);
+}
+
+/* ---------- Utility (optional) ---------- */
+.center { display: grid; place-items: center; }
+.stack > * + * { margin-top: 0.9rem; }
+.flow > * + * { margin-top: 1.2rem; }
+.grid {
+  display: grid;
+  gap: var(--gap);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+/* ---------- Smooth entrance animation ---------- */
+@keyframes float-in {
+  from { opacity: 0; transform: translateY(14px) scale(.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.card, .section, .logo { animation: float-in var(--t-slow) both; }
+
+/* ---------- Reduced motion respect ---------- */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
