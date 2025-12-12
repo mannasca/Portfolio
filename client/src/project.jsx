@@ -468,35 +468,23 @@ export default function Projects() {
         Explore a selection of my recent work and professional achievements
       </p>
 
-      {/* Role-based access */}
-      {isAuthenticated() && (
+      {/* Role-based access - Only show create button to admins */}
+      {isAdmin() && (
         <div style={styles.buttonContainer}>
           <span style={{ color: '#b8c5d6', alignSelf: 'center' }}>
             Role: <strong>{userRole}</strong>
           </span>
-          {isAdmin() && (
-            <>
-              <button
-                style={{...styles.addButton, backgroundColor: '#22c55e'}}
-                onClick={() => setShowForm(!showForm)}
-              >
-                {showForm ? 'Cancel' : '+ Add Project'}
-              </button>
-            </>
-          )}
-          {!isAdmin() && (
-            <button
-              style={{...styles.addButton, backgroundColor: '#f59e0b'}}
-              onClick={() => setShowForm(!showForm)}
-            >
-              {showForm ? 'Cancel' : '+ Create Project'}
-            </button>
-          )}
+          <button
+            style={{...styles.addButton, backgroundColor: '#22c55e'}}
+            onClick={() => setShowForm(!showForm)}
+          >
+            {showForm ? 'Cancel' : '+ Add Project'}
+          </button>
         </div>
       )}
 
-      {/* Form - Only for authenticated users */}
-      {isAuthenticated() && showForm && (
+      {/* Form - Only for admins */}
+      {isAdmin() && showForm && (
         <form style={styles.formContainer} onSubmit={handleCreateProject}>
           <div style={styles.formGroup}>
             <label style={styles.label}>Project Title *</label>

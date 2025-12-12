@@ -452,33 +452,23 @@ export default function Services() {
         Comprehensive solutions to bring your vision to life with cutting-edge technology
       </p>
 
-      {/* Role-based access */}
-      {isAuthenticated() && (
+      {/* Role-based access - Only show create button to admins */}
+      {isAdmin() && (
         <div style={styles.buttonContainer}>
           <span style={{ color: '#a8b0c7', alignSelf: 'center' }}>
             Role: <strong>{userRole}</strong>
           </span>
-          {isAdmin() && (
-            <button
-              style={{...styles.addButton, backgroundColor: '#22c55e'}}
-              onClick={() => setShowForm(!showForm)}
-            >
-              {showForm ? 'Cancel' : '+ Add Service'}
-            </button>
-          )}
-          {!isAdmin() && (
-            <button
-              style={{...styles.addButton, backgroundColor: '#f59e0b'}}
-              onClick={() => setShowForm(!showForm)}
-            >
-              {showForm ? 'Cancel' : '+ Create Service'}
-            </button>
-          )}
+          <button
+            style={{...styles.addButton, backgroundColor: '#22c55e'}}
+            onClick={() => setShowForm(!showForm)}
+          >
+            {showForm ? 'Cancel' : '+ Add Service'}
+          </button>
         </div>
       )}
 
-      {/* Form - Only for authenticated users */}
-      {isAuthenticated() && showForm && (
+      {/* Form - Only for admins */}
+      {isAdmin() && showForm && (
         <form style={styles.formContainer} onSubmit={handleCreateService}>
           <div style={styles.formGroup}>
             <label style={styles.label}>Service Title *</label>

@@ -161,6 +161,7 @@ export default function About() {
     valuesContainer: {
       borderRadius: 16,
       padding: '48px',
+      marginTop: '80px',
       border: '1px solid rgba(255, 255, 255, 0.12)',
       background: 'linear-gradient(135deg, rgba(122, 162, 255, 0.05), rgba(182, 134, 255, 0.03))',
       backdropFilter: 'blur(14px)',
@@ -242,7 +243,8 @@ export default function About() {
         />
       </div>
 
-      <div style={{marginTop: '60px'}}><h2 style={styles.sectionTitle}>🛠️ Skills & Technologies</h2>
+      <div style={{marginTop: '80px'}}>
+        <h2 style={styles.sectionTitle}>🛠️ Skills & Technologies</h2>
         <div style={styles.skillsGrid}>
           {[
             { title: '💻 Programming Languages', skills: ['JavaScript', 'Python', 'Java', 'HTML5', 'CSS3'] },
@@ -268,11 +270,21 @@ export default function About() {
         </div>
       </div>
 
-      <div style={{marginTop: '60px', borderRadius: 16, padding: '48px', border: '1px solid rgba(255, 255, 255, 0.12)', background: 'linear-gradient(135deg, rgba(122, 162, 255, 0.05), rgba(182, 134, 255, 0.03))', backdropFilter: 'blur(14px)'}}><h2 style={{...styles.sectionTitle, borderBottomColor: 'rgba(122, 162, 255, 0.3)'}}>✨ What Drives Me</h2>
-        <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 32}}>
-          <div><h3 style={{color: '#7aa2ff', fontWeight: 700, marginBottom: 12}}>🎯 Continuous Learning</h3><p style={styles.paragraph}>I'm committed to staying current with emerging technologies and best practices in software development.</p></div>
-          <div><h3 style={{color: '#7aa2ff', fontWeight: 700, marginBottom: 12}}>🚀 Innovation</h3><p style={styles.paragraph}>I love creating solutions that solve real problems and make a positive impact on users' lives.</p></div>
-                    <div><h3 style={{color: '#7aa2ff', fontWeight: 700, marginBottom: 12}}>🤝 Collaboration</h3><p style={styles.paragraph}>I thrive in team environments where diverse perspectives lead to better solutions and growth.</p></div>
+      <div style={styles.valuesContainer}>
+        <h2 style={styles.valuesTitle}>✨ What Drives Me</h2>
+        <div style={styles.valuesGrid}>
+          <div style={styles.valueItem}>
+            <h3 style={styles.valueItemTitle}>🎯 Continuous Learning</h3>
+            <p style={styles.valueItemDesc}>I'm committed to staying current with emerging technologies and best practices in software development.</p>
+          </div>
+          <div style={styles.valueItem}>
+            <h3 style={styles.valueItemTitle}>🚀 Innovation</h3>
+            <p style={styles.valueItemDesc}>I love creating solutions that solve real problems and make a positive impact on users' lives.</p>
+          </div>
+          <div style={styles.valueItem}>
+            <h3 style={styles.valueItemTitle}>🤝 Collaboration</h3>
+            <p style={styles.valueItemDesc}>I thrive in team environments where diverse perspectives lead to better solutions and growth.</p>
+          </div>
         </div>
       </div>
     </section>
