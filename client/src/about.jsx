@@ -232,7 +232,7 @@ export default function About() {
 
         {/* Image (right) */}
         <img
-          src="/images/profile-placeholder.png"
+          src="/images/profile-placeholder.PNG"
           alt="My headshot"
           width="150"
           height="150"
