@@ -5,3 +5,5 @@ README.md
 .env.example
 src
 public
+.history
+portfolio
