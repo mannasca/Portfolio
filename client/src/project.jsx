@@ -7,7 +7,6 @@ console.log('Projects API URL:', API);
 export default function Projects() {
   const { isAdmin, isAuthenticated, userRole } = useUser();
   const [projects, setProjects] = useState([]);
-  const [hoveredId, setHoveredId] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -590,12 +589,15 @@ export default function Projects() {
         {projects.map((p) => (
           <article
             key={p.id}
-            style={{
-              ...styles.card,
-              ...(hoveredId === p.id ? styles.cardHovered : { transform: 'translateY(0)', borderColor: 'rgba(255, 255, 255, 0.12)', boxShadow: '0 12px 40px rgba(0,0,0,.35)' }),
+            style={styles.card}
+            onMouseEnter={(e) => {
+              Object.assign(e.currentTarget.style, styles.cardHovered);
             }}
-            onMouseEnter={() => setHoveredId(p.id)}
-            onMouseLeave={() => setHoveredId(null)}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = '';
+              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+              e.currentTarget.style.boxShadow = '0 12px 40px rgba(0,0,0,.35)';
+            }}
           >
             <div>
               <div style={{
