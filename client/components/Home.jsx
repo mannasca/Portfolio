@@ -134,8 +134,8 @@ export default function Home() {
     },
     card: {
       borderRadius: 16,
-      padding: '48px',
-      marginBottom: '40px',
+      padding: '32px',
+      marginBottom: '24px',
       border: '1px solid rgba(255, 255, 255, 0.08)',
       background: 'rgba(30, 42, 66, 0.7)',
       backdropFilter: 'blur(10px)',
@@ -152,8 +152,8 @@ export default function Home() {
     },
     heading: {
       margin: 0,
-      marginBottom: 24,
-      fontSize: 36,
+      marginBottom: 16,
+      fontSize: 24,
       fontWeight: 800,
       color: '#ffffff',
       letterSpacing: '-0.02em',
@@ -162,13 +162,13 @@ export default function Home() {
       gap: '12px',
     },
     icon: {
-      fontSize: '48px',
+      fontSize: '28px',
       display: 'inline-block',
     },
     paragraph: {
-      margin: '0 0 16px 0',
-      fontSize: 15,
-      lineHeight: 1.8,
+      margin: 0,
+      fontSize: 14,
+      lineHeight: 1.6,
       color: '#b0b0b0',
     },
     highlight: {
@@ -346,23 +346,30 @@ export default function Home() {
       </div>
 
       {/* Cards Section */}
-      {cards.map((card) => (
-        <div
-          key={card.id}
-          style={{
-            ...styles.card,
-            ...(hoveredCard === card.id ? styles.cardHovered : {}),
-          }}
-          onMouseEnter={() => setHoveredCard(card.id)}
-          onMouseLeave={() => setHoveredCard(null)}
-        >
-          <h3 style={styles.heading}>
-            <span style={styles.icon}>{card.icon}</span>
-            {card.title}
-          </h3>
-          <p style={styles.paragraph}>{card.description}</p>
-        </div>
-      ))}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+        gap: '24px',
+        marginTop: '60px',
+      }}>
+        {cards.map((card) => (
+          <div
+            key={card.id}
+            style={{
+              ...styles.card,
+              ...(hoveredCard === card.id ? styles.cardHovered : {}),
+            }}
+            onMouseEnter={() => setHoveredCard(card.id)}
+            onMouseLeave={() => setHoveredCard(null)}
+          >
+            <h3 style={styles.heading}>
+              <span style={styles.icon}>{card.icon}</span>
+              {card.title}
+            </h3>
+            <p style={styles.paragraph}>{card.description}</p>
+          </div>
+        ))}
+      </div>
     </section>
   );
 }
