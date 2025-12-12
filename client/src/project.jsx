@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from './contexts/UserContext';
 
+const API = import.meta.env.VITE_API_URL || 'https://portfolio-kcrs.onrender.com';
+console.log('Projects API URL:', API);
 
 export default function Projects() {
   const { isAdmin, isAuthenticated, userRole } = useUser();
@@ -26,7 +28,7 @@ export default function Projects() {
   const fetchProjects = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:5000/api/project', {
+      const response = await fetch(`${API}/api/project`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -72,7 +74,7 @@ export default function Projects() {
       let response;
       if (editingId) {
         // Update existing project
-        response = await fetch(`http://localhost:5000/api/project/${editingId}`, {
+        response = await fetch(`${API}/api/project/${editingId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -81,7 +83,7 @@ export default function Projects() {
         });
       } else {
         // Create new project
-        response = await fetch('http://localhost:5000/api/project', {
+        response = await fetch(`${API}/api/project`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -119,7 +121,7 @@ export default function Projects() {
   const handleDeleteProject = async (id) => {
     if (window.confirm('Are you sure you want to delete this project?')) {
       try {
-        const response = await fetch(`http://localhost:5000/api/project/${id}`, {
+        const response = await fetch(`${API}/api/project/${id}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',

@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useUser } from './contexts/UserContext';
 
-const API = import.meta.env.VITE_API_URL;
+const API = import.meta.env.VITE_API_URL || 'https://portfolio-kcrs.onrender.com';
+console.log('API URL:', API);
 
 export default function Qualification() {
   const { isAuthenticated, userRole } = useUser();

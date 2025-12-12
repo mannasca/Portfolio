@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from './contexts/UserContext';
 
+const API = import.meta.env.VITE_API_URL || 'https://portfolio-kcrs.onrender.com';
+console.log('Services API URL:', API);
+
 export default function Services() {
   const { isAdmin, isAuthenticated, userRole } = useUser();
   const [services, setServices] = useState([]);
@@ -24,7 +27,7 @@ export default function Services() {
   const fetchServices = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:5000/api/service', {
+      const response = await fetch(`${API}/api/service`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -69,7 +72,7 @@ export default function Services() {
       let response;
       if (editingId) {
         // Update existing service
-        response = await fetch(`http://localhost:5000/api/service/${editingId}`, {
+        response = await fetch(`${API}/api/service/${editingId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -78,7 +81,7 @@ export default function Services() {
         });
       } else {
         // Create new service
-        response = await fetch('http://localhost:5000/api/service', {
+        response = await fetch(`${API}/api/service`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -115,7 +118,7 @@ export default function Services() {
   const handleDeleteService = async (id) => {
     if (window.confirm('Are you sure you want to delete this service?')) {
       try {
-        const response = await fetch(`http://localhost:5000/api/service/${id}`, {
+        const response = await fetch(`${API}/api/service/${id}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
