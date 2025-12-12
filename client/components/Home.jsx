@@ -38,11 +38,11 @@ export default function Home() {
       borderRadius: 20,
       padding: '100px 60px',
       marginBottom: '80px',
-      border: '1px solid rgba(255, 255, 255, 0.15)',
-      background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(182, 134, 255, 0.05) 100%)',
-      backdropFilter: 'blur(20px) saturate(1.2)',
-      WebkitBackdropFilter: 'blur(20px) saturate(1.2)',
-      boxShadow: '0 20px 60px rgba(102, 126, 234, 0.15)',
+      border: '1px solid rgba(255, 255, 255, 0.08)',
+      background: 'rgba(26, 42, 66, 0.6)',
+      backdropFilter: 'blur(10px)',
+      WebkitBackdropFilter: 'blur(10px)',
+      boxShadow: '0 8px 32px rgba(0,0,0,.1)',
       textAlign: 'center',
       transition: 'all 0.5s cubic-bezier(0.23, 1, 0.320, 1)',
       animation: 'fadeInDown 0.8s ease-out',
@@ -52,10 +52,7 @@ export default function Home() {
       marginBottom: 20,
       fontSize: 64,
       fontWeight: 900,
-      background: 'linear-gradient(135deg, #7aa2ff 0%, #b686ff 50%, #ff006e 100%)',
-      backgroundClip: 'text',
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
+      color: '#ffffff',
       letterSpacing: '-0.02em',
       lineHeight: 1.2,
     },
@@ -77,8 +74,8 @@ export default function Home() {
     },
     statCard: {
       padding: '32px 24px',
-      background: 'linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.02))',
-      border: '1px solid rgba(255, 255, 255, 0.12)',
+      background: 'rgba(30, 42, 66, 0.7)',
+      border: '1px solid rgba(255, 255, 255, 0.08)',
       borderRadius: '12px',
       textAlign: 'center',
       transition: 'all 300ms cubic-bezier(.2,.8,.2,1)',
@@ -93,16 +90,13 @@ export default function Home() {
     statNumber: {
       fontSize: '48px',
       fontWeight: '900',
-      background: 'linear-gradient(135deg, #00d4ff 0%, #7aa2ff 100%)',
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
-      backgroundClip: 'text',
+      color: '#7aa2ff',
       margin: '0 0 8px 0',
       fontVariantNumeric: 'tabular-nums',
     },
     statLabel: {
       fontSize: '13px',
-      color: '#a8b0c7',
+      color: '#888',
       textTransform: 'uppercase',
       letterSpacing: '0.5px',
       margin: 0,
@@ -129,9 +123,9 @@ export default function Home() {
       display: 'inline-block',
     },
     primaryBtn: {
-      background: 'linear-gradient(135deg, #7aa2ff 0%, #b686ff 100%)',
+      background: '#7aa2ff',
       color: '#ffffff',
-      boxShadow: '0 12px 30px rgba(122, 162, 255, 0.3)',
+      boxShadow: '0 8px 24px rgba(122, 162, 255, 0.3)',
     },
     secondaryBtn: {
       background: 'transparent',
@@ -142,11 +136,11 @@ export default function Home() {
       borderRadius: 16,
       padding: '48px',
       marginBottom: '40px',
-      border: '1px solid rgba(255, 255, 255, 0.12)',
-      background: 'linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.02))',
-      backdropFilter: 'blur(14px) saturate(1.05)',
-      WebkitBackdropFilter: 'blur(14px) saturate(1.05)',
-      boxShadow: '0 12px 40px rgba(0,0,0,.35)',
+      border: '1px solid rgba(255, 255, 255, 0.08)',
+      background: 'rgba(30, 42, 66, 0.7)',
+      backdropFilter: 'blur(10px)',
+      WebkitBackdropFilter: 'blur(10px)',
+      boxShadow: '0 8px 20px rgba(0,0,0,.2)',
       transition: 'all 0.3s cubic-bezier(0.23, 1, 0.320, 1)',
       cursor: 'pointer',
       animation: 'fadeInUp 0.6s ease-out',
@@ -161,7 +155,7 @@ export default function Home() {
       marginBottom: 24,
       fontSize: 36,
       fontWeight: 800,
-      color: '#e8eefc',
+      color: '#ffffff',
       letterSpacing: '-0.02em',
       display: 'flex',
       alignItems: 'center',
@@ -170,13 +164,12 @@ export default function Home() {
     icon: {
       fontSize: '48px',
       display: 'inline-block',
-      animation: 'bounce 2s ease-in-out infinite',
     },
     paragraph: {
       margin: '0 0 16px 0',
       fontSize: 15,
       lineHeight: 1.8,
-      color: '#a8b0c7',
+      color: '#b0b0b0',
     },
     highlight: {
       color: '#7aa2ff',
@@ -292,9 +285,11 @@ export default function Home() {
 
       {/* Hero Section */}
       <div style={styles.heroSection}>
-        <h1 style={styles.heroHeading}>Welcome to My Portfolio</h1>
+        <h1 style={styles.heroHeading}>Muhammad Anas</h1>
         <p style={styles.heroSubtitle}>
-          I'm <span style={styles.highlight}>Muhammad Anas</span>, a passionate Software Engineering student at Centennial College, dedicated to building innovative solutions through code and creativity.
+          Full Stack Developer | Software Engineering Student at Centennial College
+          <br />
+          Building scalable, user-focused applications with modern web technologies
         </p>
         <div style={styles.statsContainer}>
           {stats.map((stat, idx) => (
@@ -331,7 +326,7 @@ export default function Home() {
               e.currentTarget.style.boxShadow = '0 12px 30px rgba(122, 162, 255, 0.3)';
             }}
           >
-            📂 View Portfolio
+            📂 View My Work
           </Link>
           <Link
             to="/contact"
