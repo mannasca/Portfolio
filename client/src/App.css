@@ -83,7 +83,6 @@
 
 /* ---------- Page Background ---------- */
 html, body, #root {
-  background-color: grey; /* Fallback per your original note */
   margin: 0;
   padding: 0;
   min-height: 100vh;
@@ -94,9 +93,10 @@ html, body, #root {
 body {
   color: var(--txt-1);
   background:
-    radial-gradient(1200px 800px at 80% -20%, rgba(110,168,255,.20), transparent 60%),
-    radial-gradient(1000px 700px at -10% 20%, rgba(168,121,255,.18), transparent 65%),
-    linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 60%);
+    radial-gradient(1200px 800px at 80% -20%, rgba(0, 212, 255, 0.15), transparent 60%),
+    radial-gradient(900px 700px at -10% 20%, rgba(255, 0, 110, 0.12), transparent 65%),
+    radial-gradient(600px 600px at 50% 80%, rgba(0, 255, 136, 0.08), transparent 70%),
+    linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 60%, var(--bg-1) 100%);
   background-attachment: fixed;
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
   line-height: 1.6;
