@@ -326,7 +326,7 @@ export default function Home() {
               e.currentTarget.style.boxShadow = '0 12px 30px rgba(122, 162, 255, 0.3)';
             }}
           >
-            📂 View My Work
+            View My Work
           </Link>
           <Link
             to="/contact"
@@ -340,7 +340,7 @@ export default function Home() {
               e.currentTarget.style.transform = 'translateY(0)';
             }}
           >
-            ✉️ Get in Touch
+            Get in Touch
           </Link>
         </div>
       </div>
