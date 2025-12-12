@@ -1,0 +1,232 @@
+/* ===========================
+   Elevated Portfolio Styles
+   (keeps your original selectors)
+   =========================== */
+
+:root {
+  /* Modern Vibrant Color Palette */
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.95);
+  background-color: #0a0e27;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Premium Color Tokens */
+  --primary: #00d4ff;      /* Vibrant Cyan */
+  --primary-dark: #00a8cc; /* Darker Cyan */
+  --secondary: #ff006e;    /* Hot Pink */
+  --accent: #00f5ff;       /* Electric Cyan */
+  --accent-2: #ff4081;     /* Bright Magenta */
+  --success: #00ff88;      /* Neon Green */
+  --warning: #ffb700;      /* Golden Amber */
+  --danger: #ff3333;       /* Crimson Red */
+  
+  --text-1: #ffffff;       /* Pure White */
+  --text-2: #b8c5d6;       /* Light Gray Blue */
+  --text-3: #8a96a8;       /* Muted Gray Blue */
+  
+  --bg-dark: #0a0e27;      /* Deep Navy */
+  --bg-darker: #050810;    /* Almost Black */
+  --panel: rgba(0, 212, 255, 0.06);
+  --panel-strong: rgba(0, 212, 255, 0.12);
+  --panel-hover: rgba(0, 212, 255, 0.15);
+  
+  --radius: 16px;
+  --shadow: 0 12px 40px rgba(0, 212, 255, 0.1);
+  --shadow-hover: 0 20px 60px rgba(0, 212, 255, 0.2);
+  --t: 220ms cubic-bezier(.2,.8,.2,1);
+}
+
+/* Immersive gradient field - Modern Neon */
+body {
+  margin: 0 auto;
+  width: min(100%, 1100px);
+  padding: clamp(16px, 3.5vw, 32px);
+
+  color: var(--text-1);
+  background:
+    radial-gradient(1200px 800px at 80% -20%, rgba(0, 212, 255, 0.15), transparent 60%),
+    radial-gradient(900px 700px at -10% 20%, rgba(255, 0, 110, 0.12), transparent 65%),
+    radial-gradient(600px 600px at 50% 80%, rgba(0, 255, 136, 0.08), transparent 70%),
+    linear-gradient(180deg, #0a0e27 0%, #050810 60%, #050810 100%);
+  background-attachment: fixed;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Decorative micro-grid */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 22px 22px;
+  opacity: .25;
+  mask-image: radial-gradient(60% 60% at 50% 40%, black 55%, transparent 100%);
+}
+
+/* Typography */
+h1 {
+  font-size: clamp(2.25rem, 4vw, 3.4rem);
+  line-height: 1.15;
+  margin: 0 0 .6em 0;
+  letter-spacing: .2px;
+  text-wrap: balance;
+}
+
+p { color: var(--text-2); }
+
+/* Links with animated underline */
+a {
+  font-weight: 500;
+  color: var(--primary);
+  text-decoration: none;
+  position: relative;
+  transition: color var(--t);
+}
+a::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: -3px;
+  width: 100%; height: 2px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--t);
+}
+a:hover { color: var(--accent); }
+a:hover::after { transform: scaleX(1); }
+
+/* Buttons: subtle glass + gradient ring on hover */
+button {
+  border-radius: 10px;
+  border: 1px solid var(--panel-strong);
+  padding: 0.7em 1.15em;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: inherit;
+  background:
+    linear-gradient(135deg, rgba(0, 212, 255, 0.08), rgba(255, 0, 110, 0.04));
+  color: var(--text-1);
+  cursor: pointer;
+  transition: transform var(--t), box-shadow var(--t), border-color var(--t), background var(--t);
+  box-shadow: 0 6px 22px rgba(0, 212, 255, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+button:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(255, 0, 110, 0.08));
+}
+button:focus,
+button:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Glassy "card" look for any direct children sections */
+body > section,
+body > div.card,
+.card {
+  border: 1px solid var(--panel-strong);
+  border-radius: clamp(14px, 2vw, 22px);
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.06), rgba(255, 0, 110, 0.03));
+  backdrop-filter: blur(14px) saturate(1.05);
+  -webkit-backdrop-filter: blur(14px) saturate(1.05);
+  padding: clamp(16px, 3vw, 28px);
+  box-shadow: var(--shadow);
+  transition: transform var(--t), box-shadow var(--t), border-color var(--t);
+}
+body > section:hover,
+.card:hover {
+  transform: translateY(-6px);
+  border-color: var(--primary);
+  box-shadow: var(--shadow-hover);
+}
+
+/* Top nav: sticky, blurred, right-aligned as per your selector */
+nav {
+  position: sticky;
+  top: 16px;
+  z-index: 50;
+  float: right; /* keep your original behavior */
+  font-size: clamp(1rem, 1.4vw, 1.25rem);
+
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--panel-strong);
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.08), rgba(255, 0, 110, 0.04));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 26px rgba(0, 212, 255, 0.15);
+}
+nav a {
+  display: inline-block;
+  padding: 8px 12px;
+  margin: 0 2px;
+  border-radius: 999px;
+}
+nav a:hover {
+  background: rgba(0, 212, 255, 0.1);
+}
+
+/* Responsive container (replaces fixed 980px feel, but keeps your intent) */
+@media (max-width: 1200px) {
+  body { width: min(100%, 1000px); }
+}
+@media (max-width: 1024px) {
+  body { width: min(100%, 920px); }
+}
+@media (max-width: 900px) {
+  body { width: 100%; padding: 20px; }
+  nav { position: static; float: none; display: inline-flex; flex-wrap: wrap; gap: 4px; }
+}
+
+/* Motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+
+/* Light scheme tweaks (keeps your block but upgrades palette) */
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #0a0e27;
+    background-color: #ffffff;
+    --text-1: #0a0e27;
+    --text-2: #4a5680;
+    --text-3: #7a8aa8;
+    --panel: rgba(0, 212, 255, 0.05);
+    --panel-strong: rgba(0, 212, 255, 0.10);
+    --panel-hover: rgba(0, 212, 255, 0.15);
+    --primary: #0078d4;
+    --secondary: #c50f1f;
+    --accent: #00a8cc;
+  }
+  body {
+    background:
+      radial-gradient(1200px 800px at 80% -20%, rgba(0, 120, 212, 0.12), transparent 60%),
+      radial-gradient(900px 700px at -10% 20%, rgba(197, 15, 31, 0.10), transparent 65%),
+      radial-gradient(600px 600px at 50% 80%, rgba(0, 168, 204, 0.08), transparent 70%),
+      linear-gradient(180deg, #f6f8ff 0%, #ffffff 60%, #ffffff 100%);
+  }
+  a { color: var(--primary); }
+  a:hover { color: var(--accent); }
+  button { 
+    background: linear-gradient(135deg, rgba(0, 120, 212, 0.06), rgba(197, 15, 31, 0.03));
+    color: #0a0e27;
+    border-color: rgba(0, 120, 212, 0.15);
+  }
+}
+
+/* Optional niceties (no markup changes needed if you already use .card) */
+.read-the-docs { color: var(--text-2); }
