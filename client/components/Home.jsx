@@ -283,38 +283,6 @@ export default function Home() {
         }
       `}</style>
 
-      {/* Testing Badge */}
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        marginBottom: '20px',
-        gap: '12px',
-        flexWrap: 'wrap'
-      }}>
-        <span style={{
-          padding: '8px 16px',
-          background: 'rgba(34, 197, 94, 0.1)',
-          border: '1px solid rgba(34, 197, 94, 0.3)',
-          borderRadius: '20px',
-          fontSize: '12px',
-          color: '#22c55e',
-          fontWeight: '600'
-        }}>
-          ✅ 24/24 Tests Passing (100%)
-        </span>
-        <span style={{
-          padding: '8px 16px',
-          background: 'rgba(59, 130, 246, 0.1)',
-          border: '1px solid rgba(59, 130, 246, 0.3)',
-          borderRadius: '20px',
-          fontSize: '12px',
-          color: '#3b82f6',
-          fontWeight: '600'
-        }}>
-          🚀 CI/CD Enabled
-        </span>
-      </div>
-
       {/* Hero Section */}
       <div style={styles.heroSection}>
         <h1 style={styles.heroHeading}>Muhammad Anas</h1>
