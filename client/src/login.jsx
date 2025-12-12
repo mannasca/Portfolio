@@ -3,6 +3,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useUser } from './contexts/UserContext';
 import './login.css';
 
+const API = import.meta.env.VITE_API_URL || 'https://portfolio-kcrs.onrender.com';
+
 const Login = () => {
   const [formData, setFormData] = useState({
     username: '',
@@ -79,7 +81,7 @@ const Login = () => {
       }
 
       // Regular user login - Make API call to backend signin endpoint
-      const response = await fetch('http://localhost:5000/auth/signin', {
+      const response = await fetch(`${API}/auth/signin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

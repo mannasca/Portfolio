@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './forgotpassword.css';
 
+const API = import.meta.env.VITE_API_URL || 'https://portfolio-kcrs.onrender.com';
+
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
@@ -50,7 +52,7 @@ const ForgotPassword = () => {
 
     try {
       // Make API call to backend forgot-password endpoint
-      const response = await fetch('http://localhost:5000/auth/forgot-password', {
+      const response = await fetch(`${API}/auth/forgot-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
