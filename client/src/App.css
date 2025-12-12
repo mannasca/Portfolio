@@ -1,28 +1,59 @@
 /* ===========================
-   Mind-blowing Portfolio CSS
+   UNIFIED Portfolio CSS
+   Merged & Fixed CSS Variables
    =========================== */
 
-/* ---------- Design Tokens ---------- */
+/* ---------- Design Tokens (UNIFIED) ---------- */
 :root {
-  /* Palette */
-  --bg-1: #0b1020;            /* deep space */
-  --bg-2: #0f1530;            /* twilight */
-  --bg-3: #171c3a;            /* panel tone */
-  --glass: rgba(255, 255, 255, 0.06);
-  --glass-strong: rgba(255, 255, 255, 0.12);
-  --txt-1: #e8eefc;           /* primary text */
-  --txt-2: #a9b3c9;           /* secondary text */
-  --brand: #6ea8ff;           /* accent */
-  --brand-2: #a879ff;         /* secondary accent */
-  --ok: #4ade80;
-  --warn: #f59e0b;
-  --err: #ef4444;
+  /* Modern Vibrant Color Palette */
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  line-height: 1.6;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.95);
+  background-color: #0a0e27;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Palette - Primary Colors */
+  --bg-1: #0a0e27;                    /* Deep Navy Background */
+  --bg-2: #050810;                    /* Almost Black */
+  --bg-3: #171c3a;                    /* Panel tone */
+  --primary: #00d4ff;                 /* Vibrant Cyan */
+  --primary-dark: #00a8cc;            /* Darker Cyan */
+  --secondary: #ff006e;               /* Hot Pink */
+  --accent: #00f5ff;                  /* Electric Cyan */
+  --accent-2: #ff4081;                /* Bright Magenta */
+  
+  /* Text Colors */
+  --txt-1: #ffffff;                   /* Pure White */
+  --txt-2: #b8c5d6;                   /* Light Gray Blue */
+  --txt-3: #8a96a8;                   /* Muted Gray Blue */
+  
+  /* Glass & Surface */
+  --glass: rgba(0, 212, 255, 0.06);
+  --glass-strong: rgba(0, 212, 255, 0.12);
+  --panel: rgba(0, 212, 255, 0.06);
+  --panel-strong: rgba(0, 212, 255, 0.12);
+  --panel-hover: rgba(0, 212, 255, 0.15);
+  
+  /* Status Colors */
+  --ok: #00ff88;
+  --warn: #ffb700;
+  --err: #ff3333;
 
   /* Shadows & radius */
+  --radius: 16px;
   --radius-xl: 24px;
   --radius-lg: 16px;
   --radius-md: 12px;
+  --shadow: 0 12px 40px rgba(0, 212, 255, 0.1);
   --shadow-soft: 0 10px 30px rgba(0,0,0,0.25);
+  --shadow-hover: 0 20px 60px rgba(0, 212, 255, 0.2);
   --shadow-hard: 0 40px 80px rgba(0,0,0,0.35);
 
   /* Sizing & rhythm */
@@ -116,7 +147,7 @@ p, li { color: var(--txt-2); }
 
 /* ---------- Links & Buttons ---------- */
 a {
-  color: var(--brand);
+  color: var(--primary);
   text-decoration: none;
   position: relative;
   transition: color var(--t);
@@ -129,13 +160,13 @@ a::after {
   bottom: -2px;
   height: 2px;
   width: 100%;
-  background: linear-gradient(90deg, var(--brand), var(--brand-2));
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
   transform: scaleX(0);
   transform-origin: left;
   transition: transform var(--t);
 }
 
-a:hover { color: color-mix(in oklab, var(--brand) 70%, white); }
+a:hover { color: var(--accent); }
 a:hover::after { transform: scaleX(1); }
 
 .button, button {
@@ -144,24 +175,35 @@ a:hover::after { transform: scaleX(1); }
   gap: 10px;
   padding: 12px 18px;
   border-radius: var(--radius-md);
-  border: 1px solid transparent;
+  border: 1px solid var(--panel-strong);
   background:
-    linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02)) padding-box,
-    linear-gradient(120deg, var(--brand), var(--brand-2)) border-box;
+    linear-gradient(135deg, rgba(0, 212, 255, 0.12), rgba(255, 0, 110, 0.06));
   color: var(--txt-1);
   box-shadow: var(--shadow-soft);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  transition: transform var(--t), box-shadow var(--t), background var(--t);
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: inherit;
+  transition: transform var(--t), box-shadow var(--t), background var(--t), border-color var(--t);
   cursor: pointer;
 }
 
 .button:hover, button:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-hard);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--primary);
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.18), rgba(255, 0, 110, 0.10));
 }
 
-.button:active, button:active { transform: translateY(0); }
+.button:active, button:active { 
+  transform: translateY(0); 
+}
+
+.button:focus-visible, button:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 2px;
+}
 
 /* ---------- Logo (with luxe hover) ---------- */
 .logo {
@@ -195,23 +237,21 @@ a:hover::after { transform: scaleX(1); }
 
 /* ---------- Card (Glass Panel) ---------- */
 .card {
-  padding: clamp(18px, 3.5vw, 28px);
-  border-radius: var(--radius-xl);
+  padding: clamp(16px, 3vw, 28px);
+  border-radius: clamp(14px, 2vw, 22px);
   border: 1px solid var(--glass-strong);
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.02));
-  background-clip: padding-box;
-  backdrop-filter: blur(14px) saturate(1.1);
-  -webkit-backdrop-filter: blur(14px) saturate(1.1);
-  box-shadow: var(--shadow-soft);
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.06), rgba(255, 0, 110, 0.03));
+  backdrop-filter: blur(14px) saturate(1.05);
+  -webkit-backdrop-filter: blur(14px) saturate(1.05);
+  box-shadow: var(--shadow);
   color: var(--txt-1);
   transition: transform var(--t), box-shadow var(--t), border-color var(--t);
 }
 
 .card:hover {
   transform: translateY(-6px);
-  box-shadow: var(--shadow-hard);
-  border-color: color-mix(in oklab, var(--brand) 35%, var(--glass-strong));
+  box-shadow: var(--shadow-hover);
+  border-color: var(--primary);
 }
 
 /* Card grid helper (optional) */
@@ -252,7 +292,47 @@ a:hover::after { transform: scaleX(1); }
   .section--hero { grid-template-columns: 1fr; }
 }
 
-/* Accent heading underline */
+/* ---------- Navigation ---------- */
+nav {
+  position: sticky;
+  top: 16px;
+  z-index: 50;
+  float: right;
+  font-size: clamp(1rem, 1.4vw, 1.25rem);
+  
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--panel-strong);
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.08), rgba(255, 0, 110, 0.04));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 26px rgba(0, 212, 255, 0.15);
+  transition: all var(--t);
+}
+
+nav a {
+  display: inline-block;
+  padding: 8px 12px;
+  margin: 0 2px;
+  border-radius: 999px;
+  transition: background var(--t);
+}
+
+nav a:hover {
+  background: rgba(0, 212, 255, 0.1);
+}
+
+@media (max-width: 900px) {
+  nav {
+    position: static;
+    float: none;
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+}
+
+/* ---------- Accent heading underline ---------- */
 .accent-title {
   position: relative;
   display: inline-block;
@@ -266,8 +346,8 @@ a:hover::after { transform: scaleX(1); }
   width: 100%;
   height: 4px;
   border-radius: 999px;
-  background: linear-gradient(90deg, var(--brand), var(--brand-2));
-  filter: drop-shadow(0 6px 14px rgba(110,168,255,.35));
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  filter: drop-shadow(0 6px 14px rgba(0, 212, 255, 0.35));
 }
 
 /* ---------- Tag/Pill (optional) ---------- */
@@ -294,7 +374,7 @@ a:hover::after { transform: scaleX(1); }
 /* ---------- Media & Layout Tweaks ---------- */
 img, svg, video { max-width: 100%; height: auto; border-radius: 12px; }
 *:focus-visible {
-  outline: 2px solid color-mix(in oklab, var(--brand) 65%, white);
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
   border-radius: 8px;
   transition: outline-color var(--t);
