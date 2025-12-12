@@ -33,8 +33,8 @@ const connectDB = async () => {
         console.log("✅ MongoDB connected successfully");
         
         // Seed default data on first load
-        seedProjects();
-        seedServices();
+        await seedProjects();
+        await seedServices();
     } catch (err) {
         console.error("❌ MongoDB connection failed:", err.message);
         process.exit(1);
