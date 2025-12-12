@@ -92,3 +92,45 @@ export const removeAll = async (_req, res) => {
     res.status(500).json({ error: e.message });
   }
 };
+
+export const seedQualifications = async () => {
+  try {
+    const count = await Qualification.countDocuments();
+    if (count > 0) {
+      console.log(`✅ Qualifications already seeded (${count} found)`);
+      return;
+    }
+
+    const qualifications = [
+      {
+        title: "AWS Certified Cloud Practitioner",
+        firstname: "Muhammad",
+        lastname: "Anas",
+        email: "anasattar63@gmail.com",
+        completion: "October 2025",
+        description: "Cloud computing fundamentals and AWS services"
+      },
+      {
+        title: "JavaScript Advanced Certificate",
+        firstname: "Muhammad",
+        lastname: "Anas",
+        email: "anasattar63@gmail.com",
+        completion: "September 2025",
+        description: "Advanced JavaScript concepts, async programming, and ES6+"
+      },
+      {
+        title: "Full Stack Web Development",
+        firstname: "Muhammad",
+        lastname: "Anas",
+        email: "anasattar63@gmail.com",
+        completion: "December 2025",
+        description: "MERN stack development with React, Node.js, MongoDB, and Express"
+      }
+    ];
+
+    await Qualification.insertMany(qualifications);
+    console.log(`✅ Seeded ${qualifications.length} qualifications`);
+  } catch (err) {
+    console.error("❌ Error seeding qualifications:", err.message);
+  }
+};

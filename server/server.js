@@ -10,6 +10,7 @@ import projectRoutes from "./routes/project.js";
 import serviceRoutes from "./routes/service.js";
 import { seedProjects } from "./controllers/project.js";
 import { seedServices } from "./controllers/service.js";
+import { seedQualifications } from "./controllers/qualification.js";
 
 dotenv.config();
 
@@ -35,6 +36,7 @@ const connectDB = async () => {
         // Seed default data on first load
         await seedProjects();
         await seedServices();
+        await seedQualifications();
     } catch (err) {
         console.error("❌ MongoDB connection failed:", err.message);
         process.exit(1);
