@@ -215,9 +215,6 @@ const Signup = () => {
               placeholder="Leave blank for regular user"
               disabled={loading}
             />
-            <small style={{ color: '#666', marginTop: '4px' }}>
-              Enter Admin2025 to create an admin account
-            </small>
           </div>
 
           {/* Confirm Password Input */}
