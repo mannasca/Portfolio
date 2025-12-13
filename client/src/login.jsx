@@ -147,24 +147,6 @@ const Login = () => {
           </label>
         </div>
 
-        {/* Admin Credentials Hint */}
-        {isAdminLogin && (
-          <div style={{
-            marginBottom: '20px',
-            padding: '12px 16px',
-            backgroundColor: 'rgba(102, 126, 234, 0.1)',
-            border: '1px solid rgba(102, 126, 234, 0.3)',
-            borderRadius: '6px',
-            fontSize: '12px',
-            color: '#7aa2ff',
-            lineHeight: '1.5',
-          }}>
-            <strong>Admin Demo Credentials:</strong><br/>
-            Username: <code style={{ backgroundColor: 'rgba(0,0,0,0.3)', padding: '2px 6px', borderRadius: '3px' }}>admin</code><br/>
-            Password: <code style={{ backgroundColor: 'rgba(0,0,0,0.3)', padding: '2px 6px', borderRadius: '3px' }}>admin123</code>
-          </div>
-        )}
-
         {/* Error Message Display */}
         {error && (
           <div className="error-message" role="alert">
