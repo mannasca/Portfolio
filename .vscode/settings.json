@@ -1,9 +1,0 @@
-{
-  "local-history.enabled": false,
-  "local-history.exclude": {
-    "node_modules/**": true,
-    ".history/**": true,
-    "dist/**": true,
-    "build/**": true
-  }
-}
