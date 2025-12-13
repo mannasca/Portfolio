@@ -203,13 +203,22 @@ const Signup = () => {
             </div>
           </div>
 
-          {/* Hidden Admin Code Input */}
-          <input
-            type="hidden"
-            name="adminCode"
-            value={formData.adminCode}
-            onChange={handleChange}
-          />
+          {/* Admin Code Input (Optional) */}
+          <div className="form-group">
+            <label htmlFor="adminCode">Admin Code (Optional)</label>
+            <input
+              type="text"
+              id="adminCode"
+              name="adminCode"
+              value={formData.adminCode}
+              onChange={handleChange}
+              placeholder="Leave blank for regular user"
+              disabled={loading}
+            />
+            <small style={{ color: '#666', marginTop: '4px' }}>
+              Enter Admin2025 to create an admin account
+            </small>
+          </div>
 
           {/* Confirm Password Input */}
           <div className="form-group">
