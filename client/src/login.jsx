@@ -13,7 +13,6 @@ const Login = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [isAdminLogin, setIsAdminLogin] = useState(false);
   const navigate = useNavigate();
   const { login } = useUser();
 
@@ -106,46 +105,8 @@ const Login = () => {
   return (
     <div className="login-container">
       <div className="login-box">
-        <h1>{isAdminLogin ? '🔐 Admin Login' : 'Login'}</h1>
+        <h1>Login</h1>
         <p className="login-subtitle">Sign in to your account</p>
-
-        {/* Admin Login Toggle */}
-        <div style={{
-          marginBottom: '24px',
-          padding: '16px',
-          backgroundColor: 'rgba(255, 255, 255, 0.05)',
-          border: '1px solid rgba(255, 255, 255, 0.12)',
-          borderRadius: '8px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '12px',
-          cursor: 'pointer',
-        }}>
-          <input
-            type="checkbox"
-            id="adminToggle"
-            checked={isAdminLogin}
-            onChange={(e) => setIsAdminLogin(e.target.checked)}
-            style={{
-              width: '18px',
-              height: '18px',
-              cursor: 'pointer',
-              accentColor: '#667eea',
-            }}
-          />
-          <label 
-            htmlFor="adminToggle"
-            style={{
-              cursor: 'pointer',
-              color: '#a8b0c7',
-              fontWeight: '500',
-              flex: 1,
-              margin: 0,
-            }}
-          >
-            {isAdminLogin ? '👨‍💼 Admin Login' : '👤 User Login'}
-          </label>
-        </div>
 
         {/* Error Message Display */}
         {error && (
@@ -159,14 +120,14 @@ const Login = () => {
         <form onSubmit={handleSubmit} className="login-form">
           {/* Username Input */}
           <div className="form-group">
-            <label htmlFor="username">{isAdminLogin ? 'Admin Username' : 'Username'}</label>
+            <label htmlFor="username">Username</label>
             <input
               type="text"
               id="username"
               name="username"
               value={formData.username}
               onChange={handleChange}
-              placeholder={isAdminLogin ? "Enter admin username" : "Enter your username"}
+              placeholder="Enter your username"
               required
               disabled={loading}
             />
@@ -174,7 +135,7 @@ const Login = () => {
 
           {/* Password Input */}
           <div className="form-group">
-            <label htmlFor="password">{isAdminLogin ? 'Admin Password' : 'Password'}</label>
+            <label htmlFor="password">Password</label>
             <div className="password-input-wrapper">
               <input
                 type={showPassword ? 'text' : 'password'}
@@ -182,7 +143,7 @@ const Login = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder={isAdminLogin ? "Enter admin password" : "Enter your password"}
+                placeholder="Enter your password"
                 required
                 disabled={loading}
               />
