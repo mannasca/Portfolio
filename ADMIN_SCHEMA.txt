@@ -1,0 +1,74 @@
+import bcrypt from 'bcrypt';
+
+console.log('=== MONGODB SCHEMA FOR ADMIN LOGIN ===\n');
+
+console.log('Collection: users');
+console.log('\nSchema Structure:');
+console.log(`{
+  _id: ObjectId,
+  username: String (required, unique),
+  name: String (required),
+  email: String (required, unique),
+  password: String (required, bcrypt hashed),
+  role: String (enum: ["admin", "enduser", "user"], default: "enduser"),
+  createdAt: Date,
+  updatedAt: Date
+}\n`);
+
+console.log('=== ADMIN USER DOCUMENT ===\n');
+console.log('Insert this document into MongoDB:\n');
+
+const adminDoc = {
+  username: 'admin',
+  name: 'Admin User',
+  email: 'admin@portfolio.com',
+  password: '$2b$10$1JuoPPuhzGkJad4dqIeDneHfyfjY.7Cj92cD/a4RU1HIyymYhcHkO',
+  role: 'admin'
+};
+
+console.log('db.users.insertOne({');
+console.log(`  username: "${adminDoc.username}",`);
+console.log(`  name: "${adminDoc.name}",`);
+console.log(`  email: "${adminDoc.email}",`);
+console.log(`  password: "${adminDoc.password}",`);
+console.log(`  role: "${adminDoc.role}"`);
+console.log('})\n');
+
+console.log('=== LOGIN CREDENTIALS ===\n');
+console.log('Username: admin');
+console.log('Password: AdminSecure@2025\n');
+
+console.log('=== HOW TO ADD TO MONGODB ===\n');
+console.log('Option 1: MongoDB Atlas UI');
+console.log('1. Go to MongoDB Atlas Dashboard');
+console.log('2. Click "Browse Collections"');
+console.log('3. Click the "+" button to insert document');
+console.log('4. Paste the JSON above');
+console.log('5. Click Insert\n');
+
+console.log('Option 2: MongoDB Shell');
+console.log('Run in mongosh:');
+console.log('use your_database_name');
+console.log(`db.users.insertOne(${JSON.stringify(adminDoc, null, 2)})\n`);
+
+console.log('Option 3: Update Existing User');
+console.log('If user already exists, update role to admin:');
+console.log(`db.users.updateOne(
+  { username: "admin" },
+  { $set: { role: "admin" } }
+)\n`);
+
+console.log('=== ADMIN LOGIN FLOW ===\n');
+console.log('Frontend sends:');
+console.log('POST /auth/signin');
+console.log('{');
+console.log('  username: "admin",');
+console.log('  password: "AdminSecure@2025"');
+console.log('}\n');
+
+console.log('Backend:');
+console.log('1. Finds user by username in MongoDB');
+console.log('2. Compares password with bcrypt');
+console.log('3. Checks role field (must be "admin")');
+console.log('4. Returns JWT token with role: "admin"');
+console.log('5. Frontend verifies role is "admin"\n');

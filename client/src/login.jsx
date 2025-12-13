@@ -57,30 +57,7 @@ const Login = () => {
     setError('');
 
     try {
-      // For admin login - use hardcoded credentials for demo
-      if (isAdminLogin) {
-        if (formData.username === 'admin' && formData.password === 'admin123') {
-          // Admin login successful
-          const adminUser = {
-            id: 'admin_1',
-            username: 'admin',
-            email: 'admin@portfolio.com',
-            role: 'admin'
-          };
-          localStorage.setItem('authToken', 'admin_token_' + Date.now());
-          localStorage.setItem('user', JSON.stringify(adminUser));
-          login(adminUser, 'admin');
-          navigate('/');
-          console.log('✅ Admin login successful');
-          return;
-        } else {
-          setError('Invalid admin credentials. Use username: admin, password: admin123');
-          setLoading(false);
-          return;
-        }
-      }
-
-      // Regular user login - Make API call to backend signin endpoint
+      // Make API call to backend signin endpoint (works for both admin and regular users)
       const response = await fetch(`${API}/auth/signin`, {
         method: 'POST',
         headers: {
@@ -97,6 +74,12 @@ const Login = () => {
       if (!response.ok) {
         // Backend returned an error (401, 404, 500, etc.)
         setError(data.message || 'Login failed. Please try again.');
+        return;
+      }
+
+      // Check if user is admin (only for admin login toggle)
+      if (isAdminLogin && data.user.role !== 'admin') {
+        setError('This account is not an admin account. Please use your regular credentials.');
         return;
       }
 
