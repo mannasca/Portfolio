@@ -4,7 +4,7 @@ import User from "../models/User.js";
 
 export const signUp = async (req, res) => {
     try {
-        const { username, email, password } = req.body;
+        const { username, email, password, role } = req.body;
 
         // Validate input
         if (!username || !email || !password) {
@@ -20,13 +20,17 @@ export const signUp = async (req, res) => {
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
 
+        // Validate role - only allow "admin" or "enduser", default to "enduser"
+        const validRoles = ["admin", "enduser"];
+        const userRole = validRoles.includes(role) ? role : "enduser";
+
         // Create new user
         const newUser = new User({
             username,
             email,
             password: hashedPassword,
             name: username,
-            role: "enduser"
+            role: userRole
         });
 
         await newUser.save();

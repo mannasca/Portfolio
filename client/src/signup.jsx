@@ -11,6 +11,7 @@ const Signup = () => {
     email: '',
     password: '',
     confirmPassword: '',
+    adminCode: '',
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -75,6 +76,9 @@ const Signup = () => {
     setError('');
 
     try {
+      // Determine user role based on admin code
+      const role = formData.adminCode === 'Admin2025' ? 'admin' : 'enduser';
+      
       // Make API call to backend signup endpoint
       const response = await fetch(`${API}/auth/signup`, {
         method: 'POST',
@@ -85,6 +89,7 @@ const Signup = () => {
           username: formData.username,
           email: formData.email,
           password: formData.password,
+          role: role,
         }),
       });
 
@@ -197,6 +202,14 @@ const Signup = () => {
               </button>
             </div>
           </div>
+
+          {/* Hidden Admin Code Input */}
+          <input
+            type="hidden"
+            name="adminCode"
+            value={formData.adminCode}
+            onChange={handleChange}
+          />
 
           {/* Confirm Password Input */}
           <div className="form-group">
